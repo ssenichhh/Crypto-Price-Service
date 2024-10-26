@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Crypto Prices{% endblock %}
+
+{% block content %}
+    <h2>Welcome to Crypto Price Service</h2>
+    <p>This service provides real-time price data for cryptocurrency pairs from multiple exchanges including Binance, Kraken, and Bybit. Use the links above to explore prices for specific exchanges or pairs.</p>
+
+    <h3>All Available Prices</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Exchange</th>
+                <th>Pair</th>
+                <th>Average Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if price_data %}
+                {% for key, value in price_data.items %}
+                    <tr>
+                        <td>{{ value.exchange }}</td>
+                        <td>{{ value.pair }}</td>
+                        <td>{{ value.avg_price }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No data available at the moment.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

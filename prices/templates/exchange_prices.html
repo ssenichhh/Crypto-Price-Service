@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Prices for Exchange: {{ exchange }}</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Pair</th>
+        <th>Average Price</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if prices %}
+        {% for price in prices %}
+          <tr>
+            <td>{{ price.pair }}</td>
+            <td>{{ price.avg_price }}</td>
+            <td>{{ price.timestamp }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="3">No data available for this exchange.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+{% endblock %}

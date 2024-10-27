@@ -13,8 +13,8 @@ class PriceView(View):
         pair = request.GET.get('pair')
 
         filtered_data = [value for key, value in cache.get('price_data', {}).items() if
-                         (not exchange or value['exchange'] == exchange.lower()) and
-                         (not pair or value['pair'] == normalize_pair_name(pair))]
+                         (not exchange or value['exchange'] == exchange.lower())
+                         and (not pair or value['pair'] == normalize_pair_name(pair))]
 
         context = {'prices': filtered_data, 'exchange': exchange, 'pair': pair}
 
@@ -27,7 +27,8 @@ class PairPriceView(View):
     def get(self, request, pair):
         normalized_pair = normalize_pair_name(pair)
 
-        filtered_data = [value for key, value in cache.get('price_data', {}).items() if value['pair'] == normalized_pair]
+        filtered_data = [value for key, value in cache.get('price_data',
+                                                           {}).items() if value['pair'] == normalized_pair]
 
         context = {'prices': filtered_data, 'pair': pair}
 

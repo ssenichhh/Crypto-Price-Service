@@ -48,14 +48,27 @@ Ensure Redis is installed and running locally, as it is used for caching price d
 ```bash
 docker run -d -p 6379:6379 redis
 ```
+### Step 5: Update Cache Settings
+If you are running Redis locally without Docker, ensure your Django settings.py has the following cache configuration:
+```
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+} 
+```
 
-### Step 5: Running the WebSocket Clients
+### Step 6: Running the WebSocket Clients
 Run the WebSocket clients to start receiving real-time data from Binance and Kraken:
 ```bash
 (venv) $ python3 manage.py run_websockets
 ```
 
-### Step 6: Run the Django Development Server
+### Step 7: Run the Django Development Server
 To start the Django server and view the web interface:
 ```bash
 (venv) $ python3 manage.py runserver
@@ -66,13 +79,28 @@ Visit `http://127.0.0.1:8000/` to access the service.
 
 To simplify deployment, a Docker setup is provided. The Docker setup ensures all dependencies are included and configures the necessary services.
 
-### Step 1: Build and Run Docker Containers
+## Step 1: Update Cache Settings for Docker
+If you are running the project using Docker, update the CACHES configuration in settings.py as follows:
+
+```
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+```
+
+### Step 2: Build and Run Docker Containers
 ```bash
 $ docker-compose up --build
 ```
 This will build the Docker images and run the project along with Redis.
 
-### Step 2: Access the Service
+### Step 3: Access the Service
 Once the Docker containers are running, you can access the service at:
 `http://127.0.0.1:8000/`
 

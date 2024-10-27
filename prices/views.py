@@ -5,22 +5,6 @@ from django.core.cache import cache
 from .utils import normalize_pair_name
 
 
-class PriceView(View):
-    template_name = 'prices.html'
-
-    def get(self, request):
-        exchange = request.GET.get('exchange')
-        pair = request.GET.get('pair')
-
-        filtered_data = [value for key, value in cache.get('price_data', {}).items() if
-                         (not exchange or value['exchange'] == exchange.lower())
-                         and (not pair or value['pair'] == normalize_pair_name(pair))]
-
-        context = {'prices': filtered_data, 'exchange': exchange, 'pair': pair}
-
-        return render(request, self.template_name, context)
-
-
 class PairPriceView(View):
     template_name = 'pair_prices.html'
 

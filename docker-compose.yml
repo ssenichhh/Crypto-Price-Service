@@ -9,16 +9,16 @@ services:
       - .:/app
     depends_on:
       - redis
+    networks:
+      - app_network
 
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
+    networks:
+      - app_network
 
-  websockets:
-    build: .
-    command: python manage.py run_websockets
-    depends_on:
-      - redis
-    volumes:
-      - .:/app
+networks:
+  app_network:
+    driver: bridge

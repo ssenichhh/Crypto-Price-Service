@@ -8,7 +8,6 @@ from .utils import normalize_pair_name
 BINANCE_WS = "wss://stream.binance.com:9443/ws/!ticker@arr"
 KRAKEN_WS = "wss://ws.kraken.com"
 
-# Price data storage (for cache)
 price_data = {}
 
 
@@ -20,7 +19,6 @@ async def binance_ws_client():
                 print("Connected to Binance WebSocket.")
                 while True:
                     data = await websocket.recv()
-                    print("Received data from Binance:", data)
                     update_binance_data(json.loads(data))
         except Exception as e:
             print(f"Error in Binance WebSocket client: {e}, retrying in 5 seconds...")
@@ -35,11 +33,10 @@ async def kraken_ws_client():
                 print("Connected to Kraken WebSocket.")
                 subscribe = {
                     "event": "subscribe",
-                    "pair": ["BTC/USD", "ETH/USD"],
+                    "pair": ["BTC/USDT", "ETH/USDT", "SOL/USDT", "DOGE/USDT", "BNB/USDT"],
                     "subscription": {"name": "ticker"}
                 }
                 await websocket.send(json.dumps(subscribe))
-                print("Subscribed to Kraken pairs.")
                 while True:
                     data = await websocket.recv()
                     print("Received data from Kraken:", data)
@@ -68,14 +65,13 @@ def update_binance_data(data):
 def update_kraken_data(data):
     if isinstance(data, list) and len(data) > 1:
         ticker_info = data[1]
-        pair = data[-1]
+        pair = data[-1].replace('/', '-')
         bid_price = float(ticker_info['b'][0])
         ask_price = float(ticker_info['a'][0])
         avg_price = (bid_price + ask_price) / 2
-        normalized_pair = normalize_pair_name(pair)
-        price_data[f"kraken_{normalized_pair}"] = {
+        price_data[f"kraken_{pair}"] = {
             'exchange': 'kraken',
-            'pair': normalized_pair,
+            'pair': pair,
             'avg_price': avg_price,
             'timestamp': time.time()
         }
